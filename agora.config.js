@@ -1,0 +1,2 @@
+export const appid = "355d019ca460446c92e70b47c71ab75c";
+export const token = "006355d019ca460446c92e70b47c71ab75cIAC4BTYsjDTXehSfdDHgsMR7iTm08nMbK32HLSeMF0kpxgx+f9gAAAAAEADG0H3jcUXhYgEAAQBxReFi+eyx0uaKdyPfpaK331i9MnAYdQ1GegDMhZqbmfubwx+f9gAAAAAEAAU3oYIGvLgYgEAAQAa8uBi";
