@@ -6,3 +6,9 @@
         style="height: 100%; width: 100%; min-height: 500px; z-index: 100; overflow: hidden;">
     </iframe>
 </template>
+
+<style scoped>
+    body{
+        margin: 0;
+    }
+</style>
