@@ -1,4 +1,4 @@
 import Vue from "vue";
-import AgoraRTC from "agora-rtc-sdk-ng"
+import AgoraRTC from "agora-rtc-sdk"
 
 Vue.use(AgoraRTC);
