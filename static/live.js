@@ -19,7 +19,7 @@ var options = {
   uid: null,
   token: null,
   role: "audience", // host or audience
-  audienceLatency: 1
+  audienceLatency: 2
 };
 
 // the demo can auto join channel with params in url
@@ -138,23 +138,24 @@ async function leave() {
 }
 
 async function subscribe(user, mediaType) {
-    const uid = user.uid;
-    // subscribe to a remote user
-    await client.subscribe(user, mediaType);
-    console.log("subscribe success");
-    if (mediaType === 'video') {
-        const player = $(`
+  const uid = user.uid;
+  // subscribe to a remote user
+  await client.subscribe(user, mediaType);
+  console.log("subscribe success");
+  if (mediaType === 'video') {
+    const player = $(`
       <div id="player-wrapper-${uid}">
         <p class="player-name">remoteUser(${uid})</p>
         <div id="player-${uid}" class="player"></div>
       </div>
     `);
-        $("#remote-playerlist").append(player);
-        user.videoTrack.play(`player-${uid}`, {fit:"contain"});
-    }
-    if (mediaType === 'audio') {
-        user.audioTrack.play();
-    }
+    $("#remote-playerlist").append(player);
+    user.videoTrack.play(`player-${uid}`);
+    $("#local").css("display", "none");
+  }
+  if (mediaType === 'audio') {
+    user.audioTrack.play();
+  }
 }
 
 function handleUserPublished(user, mediaType) {
