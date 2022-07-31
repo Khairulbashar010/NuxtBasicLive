@@ -20,22 +20,22 @@
             <div class="row join-info-group">
                 <div class="col-sm">
                     <p class="join-info-text">AppID</p>
-                    <input id="appid" type="text" placeholder="enter appid" v-bind="options.appid" required>
+                    <input id="appid" type="text" placeholder="enter appid" v-model="options.appid" required>
                     <p class="tips">If you don`t know what is your appid, checkout <a href="https://docs.agora.io/en/Agora%20Platform/terms?platform=All%20Platforms#a-nameappidauapp-idu">this</a></p>
                 </div>
                 <div class="col-sm">
                     <p class="join-info-text">Token(optional)</p>
-                    <input id="token" type="text" placeholder="enter token" v-bind="options.token">
+                    <input id="token" type="text" placeholder="enter token" v-model="options.token">
                     <p class="tips">If you don`t know what is your token, checkout <a href="https://docs.agora.io/en/Agora%20Platform/terms?platform=All%20Platforms#a-namekeyadynamic-key">this</a></p>
                 </div>
                 <div class="col-sm">
                     <p class="join-info-text">Channel</p>
-                    <input id="channel" type="text" placeholder="enter channel name" v-bind="options.channel" required>
+                    <input id="channel" type="text" placeholder="enter channel name" v-model="options.channel" required>
                     <p class="tips">If you don`t know what is your channel, checkout <a href="https://docs.agora.io/en/Agora%20Platform/terms?platform=All%20Platforms#channel">this</a></p>
                 </div>
                 <div class="col-sm">
                     <p class="join-info-text">User ID(optional)</p>
-                    <input id="uid" type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"  v-bind="options.uid" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="Enter the user ID">
+                    <input id="uid" type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"  v-model="options.uid" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="Enter the user ID">
                 </div>
             </div>
 
@@ -89,7 +89,7 @@ export default {
                 // Use a temp token
                 token: agora.token,
                 // Uid
-                uid: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+                uid: Math.floor(Math.random() * 16) + 5,
             },
             remoteUsers: {},
             clientRoleOptions: {
@@ -212,11 +212,13 @@ export default {
 
     },
     mounted() {
-        this.rtc.client = AgoraRTC.createClient({
+        if(process.client){
+            this.rtc.client = AgoraRTC.createClient({
                 mode: "live",
                 codec: "vp8",
-        });
-        this.startBasicLiveStreaming();
+            });
+            this.startBasicLiveStreaming();
+        }
     }
 }
 </script>

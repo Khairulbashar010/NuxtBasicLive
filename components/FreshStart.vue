@@ -33,7 +33,7 @@ export default {
                 // Use a temp token
                 token: agora.token,
                 // Uid
-                uid: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+                uid: Math.floor(Math.random() * 2.5),
             },
             clientRoleOptions: {
                 // Set latency level to low latency
