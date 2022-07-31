@@ -1,5 +1,5 @@
 // create Agora client
-var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+var client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
 
 var localTracks = {
   videoTrack: null,
@@ -17,7 +17,9 @@ var options = {
   appid: null,
   channel: null,
   uid: null,
-  token: null
+  token: null,
+  role: "audience", // host or audience
+  audienceLatency: 1
 };
 
 // the demo can auto join channel with params in url
@@ -37,21 +39,20 @@ $(() => {
 
 })
 
+$("#host-join").click(function (e) {
+    options.role = "host"
+})
+
 $("#join-form").submit(async function (e) {
   e.preventDefault();
-  $("#join").attr("disabled", true);
+  $("#host-join").attr("disabled", true);
+  $("#audience-join").attr("disabled", true);
   try {
     options.appid = $("#appid").val();
     options.token = $("#token").val();
     options.channel = $("#channel").val();
     options.uid = Number($("#uid").val());
     await join();
-    if(options.token) {
-      $("#success-alert-with-token").css("display", "block");
-    } else {
-      $("#success-alert a").attr("href", `index.html?appid=${options.appid}&channel=${options.channel}&token=${options.token}`);
-      $("#success-alert").css("display", "block");
-    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -78,96 +79,100 @@ $("#mute-video").click(function (e) {
     unmuteVideo();
   }
 })
-
 async function join() {
-  // add event listener to play remote tracks when remote users join, publish and leave.
-  client.on("user-published", handleUserPublished);
-  client.on("user-joined", handleUserJoined);
-  client.on("user-left", handleUserLeft);
+    // create Agora client
 
-  // join a channel and create local tracks, we can use Promise.all to run them concurrently
-  [ options.uid, localTracks.audioTrack, localTracks.videoTrack ] = await Promise.all([
+    if (options.role === "audience") {
+        client.setClientRole(options.role, {level: options.audienceLatency});
+        // add event listener to play remote tracks when remote user publishs.
+        client.on("user-published", handleUserPublished);
+        client.on("user-unpublished", handleUserUnpublished);
+    }
+    else{
+        client.setClientRole(options.role);
+    }
+
     // join the channel
-    client.join(options.appid, options.channel, options.token || null, options.uid || null),
-    // create local tracks, using microphone and camera
-    AgoraRTC.createMicrophoneAudioTrack(),
-    AgoraRTC.createCameraVideoTrack()
-  ]);
+    options.uid = await client.join(options.appid, options.channel, options.token || null, options.uid || null);
 
-  showMuteButton();
-  
-  // play local video track
-  localTracks.videoTrack.play("local-player");
-  $("#local-player-name").text(`localVideo(${options.uid})`);
-
-  // publish local tracks to channel
-  await client.publish(Object.values(localTracks));
-  console.log("publish success");
+    if (options.role === "host") {
+        // create local audio and video tracks
+        localTracks.audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        localTracks.videoTrack = await AgoraRTC.createCameraVideoTrack();
+        // play local video track
+        localTracks.videoTrack.play("local-player");
+        $("#local-player-name").text(`localTrack(${options.uid})`);
+        // publish local tracks to channel
+        await client.publish(Object.values(localTracks));
+        console.log("publish success");
+        showMuteButton();
+    }
 }
 
+
 async function leave() {
-  for (trackName in localTracks) {
-    var track = localTracks[trackName];
-    if(track) {
-      track.stop();
-      track.close();
-      localTracks[trackName] = undefined;
+    for (trackName in localTracks) {
+        var track = localTracks[trackName];
+        if (track) {
+            track.stop();
+            track.close();
+            localTracks[trackName] = undefined;
+        }
     }
-  }
 
-  // remove remote users and player views
-  remoteUsers = {};
-  $("#remote-playerlist").html("");
+    // remove remote users and player views
+    remoteUsers = {};
+    $("#remote-playerlist").html("");
 
-  // leave the channel
-  await client.leave();
+    // leave the channel
+    await client.leave();
 
-  $("#local-player-name").text("");
-  $("#join").attr("disabled", false);
-  $("#leave").attr("disabled", true);
-  hideMuteButton();
-  console.log("client leaves channel success");
+    $("#local-player-name").text("");
+    $("#host-join").attr("disabled", false);
+    $("#audience-join").attr("disabled", false);
+    $("#leave").attr("disabled", true);
+    if (options.role === "host") {
+        hideMuteButton();
+    }
+    console.log("client leaves channel success");
 }
 
 async function subscribe(user, mediaType) {
-  const uid = user.uid;
-  // subscribe to a remote user
-  await client.subscribe(user, mediaType);
-  console.log("subscribe success");
-
-  // if the video wrapper element is not exist, create it.
-  if (mediaType === 'video') {
-    if ($(`#player-wrapper-${uid}`).length === 0) {
-      const player = $(`
-        <div id="player-wrapper-${uid}">
-          <p class="player-name">remoteUser(${uid})</p>
-          <div id="player-${uid}" class="player"></div>
-        </div>
-      `);
-      $("#remote-playerlist").append(player);
+    const uid = user.uid;
+    // subscribe to a remote user
+    await client.subscribe(user, mediaType);
+    console.log("subscribe success");
+    if (mediaType === 'video') {
+        const player = $(`
+      <div id="player-wrapper-${uid}">
+        <p class="player-name">remoteUser(${uid})</p>
+        <div id="player-${uid}" class="player"></div>
+      </div>
+    `);
+        $("#remote-playerlist").append(player);
+        user.videoTrack.play(`player-${uid}`, {fit:"contain"});
     }
-
-    // play the remote video.
-    user.videoTrack.play(`player-${uid}`);
-  }
-  if (mediaType === 'audio') {
-    user.audioTrack.play();
-  }
-}
-
-function handleUserJoined(user) {
-  const id = user.uid;
-  remoteUsers[id] = user;
-}
-
-function handleUserLeft(user) {
-  const id = user.uid;
-  delete remoteUsers[id];
-  $(`#player-wrapper-${id}`).remove();
+    if (mediaType === 'audio') {
+        user.audioTrack.play();
+    }
 }
 
 function handleUserPublished(user, mediaType) {
-  subscribe(user, mediaType);
+    //print in the console log for debugging 
+    console.log('"user-published" event for remote users is triggered.');
+    const id = user.uid;
+    remoteUsers[id] = user;
+    subscribe(user, mediaType);
+}
+
+function handleUserUnpublished(user, mediaType) {
+    //print in the console log for debugging 
+    console.log('"user-unpublished" event for remote users is triggered.');
+    if (mediaType === 'video') {
+        const id = user.uid;
+        delete remoteUsers[id];
+        $(`#player-wrapper-${id}`).remove();
+    }
 }
 
 function hideMuteButton() {

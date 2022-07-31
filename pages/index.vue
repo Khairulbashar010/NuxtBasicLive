@@ -1,5 +1,5 @@
 <template>
-  <BasicLive/>
+  <IframeTest/>
 </template>
 
 <script>
