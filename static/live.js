@@ -99,8 +99,12 @@ $("#switch-camera").click(function (e) {
     }
 })
 
-function switchCamera(device) {
-  localTracks.videoTrack.switchDevice("video",device.deviceId);
+async function switchCamera(device) {
+  await localTracks.videoTrack.setDevice(device.deviceId).then(() => {
+    console.log("set device success");
+  }).catch(e => {
+    console.log("set device error", e);
+  });
 }
 
 $("#mute-video").click(function (e) {
