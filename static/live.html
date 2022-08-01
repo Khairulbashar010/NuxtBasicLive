@@ -39,10 +39,7 @@
                 <p class="join-info-text">User ID(optional)</p>
                 <input id="uid" type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="Enter the user ID">
               </div>
-          </div>
-
-          <div id="logs"></div>
-    
+          </div>    
           <div class="button-group">
             <button id="host-join" type="submit" class="btn btn-primary btn-sm">Join as host</button>
             <button id="audience-join" type="submit" class="btn btn-primary btn-sm"> Join as audience </button>
@@ -53,6 +50,7 @@
           </div>
         </form>
 
+        <div id="logs"></div>
         <div class="row video-group">
           <div class="col" id="local">
             <p id="local-player-name" class="player-name"></p>
