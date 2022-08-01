@@ -144,6 +144,7 @@ async function leave() {
     $("#local-player-name").text("");
     $("#host-join").attr("disabled", false);
     $("#audience-join").attr("disabled", false);
+    $("#local").css("display", "inline-block");
     $("#leave").attr("disabled", true);
     if (options.role === "host") {
         hideMuteButton();
