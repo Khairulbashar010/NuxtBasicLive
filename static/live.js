@@ -22,7 +22,7 @@ var options = {
   audienceLatency: 2
 };
 
-var cameras = null;
+var cameras = [];
 
 // the demo can auto join channel with params in url
 $(async () => {
@@ -38,12 +38,18 @@ $(async () => {
     $("#token").val(options.token);
     $("#channel").val(options.channel);
     $("#join-form").submit();
+    $("logs").append(`<p>${cameras.length}</p>`);
+    $("logs").append(`<p>${cameras[0]}</p>`);
   }
 
 })
 
 $("#host-join").click(function (e) {
     options.role = "host"
+})
+
+$("#audience-join").click(function (e) {
+    options.role = "audience"
 })
 
 $("#join-form").submit(async function (e) {
