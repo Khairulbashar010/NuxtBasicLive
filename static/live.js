@@ -152,6 +152,7 @@ async function leave() {
     if (options.role === "host") {
         hideMuteButton();
     }
+    $("#logs").empty(); 
     console.log("client leaves channel success");
 }
 
