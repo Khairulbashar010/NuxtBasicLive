@@ -31,14 +31,7 @@ $(async () => {
   options.channel = urlParams.get("channel");
   options.token = urlParams.get("token");
   options.uid = urlParams.get("uid");
-  cameras = await AgoraRTC.getCameras().then(device => {
-    var logs = $(`
-        <p class="player-name">Camera length (${cameras.length})</p>
-        <p>Cameras ${cameras[0]}</p>  
-    `);
-    $("logs").append(logs);
-    return device;
-  });
+  cameras = await AgoraRTC.getCameras().then(device => device);
   if (options.appid && options.channel) {
     $("#uid").val(options.uid);
     $("#appid").val(options.appid);
@@ -125,6 +118,11 @@ async function join() {
         await client.publish(Object.values(localTracks));
         console.log("publish success");
         showMuteButton();
+        var logs = $(`
+          <p class="player-name">Camera length (${cameras.length})</p>
+          <p>Cameras ${JSON.stringify(cameras)}</p>
+        `);
+        $("logs").append(logs);
     }
 }
 
