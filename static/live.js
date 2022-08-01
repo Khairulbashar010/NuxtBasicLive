@@ -21,6 +21,7 @@ var options = {
   role: "audience", // host or audience
   audienceLatency: 2
 };
+var cameras = null;
 
 // the demo can auto join channel with params in url
 $(() => {
@@ -45,6 +46,8 @@ $("#host-join").click(function (e) {
 
 $("#join-form").submit(async function (e) {
   e.preventDefault();
+  cameras = await AgoraRTC.getCameras();
+  console.log("There are "+cameras.length+" cameras");
   $("#host-join").attr("disabled", true);
   $("#audience-join").attr("disabled", true);
   try {
