@@ -137,9 +137,7 @@ async function join() {
         await client.publish(Object.values(localTracks));
         console.log("publish success");
         showMuteButton();
-        if(cameras.length > 1) {
-          $("#switch-camera").css("display", "inline-block");
-        }
+        $("#switch-camera").css("display", "inline-block");
         var logs = $(`
           <p class="player-name">Camera length (${cameras.length})</p>
           <p>Cameras ${JSON.stringify(cameras)}</p>
