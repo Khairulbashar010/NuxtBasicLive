@@ -37,6 +37,9 @@
   .player-name {
     margin: 8px 0;
   }
+  #switch-camera {
+    display: none;
+  }
   
   #success-alert, #success-alert-with-token, #mute-audio, #mute-video {
     display: none;
