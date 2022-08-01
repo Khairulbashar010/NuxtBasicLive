@@ -22,6 +22,7 @@ var options = {
   audienceLatency: 2
 };
 
+var defaultCamera = null;
 var cameras = [];
 
 // the demo can auto join channel with params in url
@@ -31,7 +32,10 @@ $(async () => {
   options.channel = urlParams.get("channel");
   options.token = urlParams.get("token");
   options.uid = urlParams.get("uid");
-  cameras = await AgoraRTC.getCameras().then(device => device);
+  cameras = await AgoraRTC.getCameras().then(device => {
+    defaultCamera = 0;
+    return device;
+  });
   if (options.appid && options.channel) {
     $("#uid").val(options.uid);
     $("#appid").val(options.appid);
@@ -81,8 +85,23 @@ $("#mute-audio").click(function (e) {
 
 $("#switch-camera").click(function (e) {
     localTracks.videoTrack.getVideoTrack().stop();
-    localTracks.videoTrack.switchDevice("video",devices.value);
+    switch (defaultCamera) {
+      case 0:
+        switchCamera(cameras[0]);
+        defaultCamera = 1;
+        break;
+      case 1:
+        switchCamera(cameras[1]);
+        defaultCamera = 0;
+        break;
+      default:
+        break;
+    }
 })
+
+function switchCamera(device) {
+  localTracks.videoTrack.switchDevice("video",device.deviceId);
+}
 
 $("#mute-video").click(function (e) {
   if (!localTrackState.videoTrackMuted) {
@@ -118,6 +137,7 @@ async function join() {
         await client.publish(Object.values(localTracks));
         console.log("publish success");
         showMuteButton();
+        showSwitchCameraButton();
         var logs = $(`
           <p class="player-name">Camera length (${cameras.length})</p>
           <p>Cameras ${JSON.stringify(cameras)}</p>
@@ -207,7 +227,6 @@ function showMuteButton() {
 
 function showSwitchCameraButton() {
   if(cameras.length > 1) {
-    console.log(cameras)
     $("#switch-camera").css("display", "inline-block");
   }
 }
