@@ -21,6 +21,7 @@ var options = {
   role: "audience", // host or audience
   audienceLatency: 2
 };
+
 var cameras = AgoraRTC.getCameras();;
 
 // the demo can auto join channel with params in url
