@@ -122,7 +122,7 @@ async function join() {
           <p class="player-name">Camera length (${cameras.length})</p>
           <p>Cameras ${JSON.stringify(cameras)}</p>
         `);
-        $("logs").append(logs);
+        $("#logs").append(logs);
     }
 }
 
