@@ -86,11 +86,11 @@ $("#mute-audio").click(function (e) {
 $("#switch-camera").click(function (e) {
     switch (defaultCamera) {
       case 0:
-        switchCamera(cameras[0]);
+        switchCamera(cameras[1]);
         defaultCamera = 1;
         break;
       case 1:
-        switchCamera(cameras[1]);
+        switchCamera(cameras[0]);
         defaultCamera = 0;
         break;
       default:
