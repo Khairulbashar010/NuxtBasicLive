@@ -1,9 +1,7 @@
 <template>
-  <iframe id="iframe" class="w-full"
-  height="500" width="500" :src="
-        `/live.html`"
-        scrolling="no" scrollbars="no" frameborder="0" 
-        style="height: 100%; width: 100%; min-height: 500px; z-index: 100;">
+  <iframe id="iframe" class="w-full" :src="
+        `/live.html`" scrollbars="no" frameborder="0" 
+        style="height: 100vh; width: 100%; z-index: 100; overflow-y: scroll">
     </iframe>
 </template>
 
