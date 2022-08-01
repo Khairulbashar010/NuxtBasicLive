@@ -31,15 +31,17 @@ $(async () => {
   options.channel = urlParams.get("channel");
   options.token = urlParams.get("token");
   options.uid = urlParams.get("uid");
-  cameras = await AgoraRTC.getCameras().then(device => device);
+  cameras = await AgoraRTC.getCameras().then(device => {
+    $("logs").append(`<p>${cameras.length}</p>`);
+    $("logs").append(`<p>${cameras[0]}</p>`);
+    return device;
+  });
   if (options.appid && options.channel) {
     $("#uid").val(options.uid);
     $("#appid").val(options.appid);
     $("#token").val(options.token);
     $("#channel").val(options.channel);
     $("#join-form").submit();
-    $("logs").append(`<p>${cameras.length}</p>`);
-    $("logs").append(`<p>${cameras[0]}</p>`);
   }
 
 })
