@@ -84,7 +84,6 @@ $("#mute-audio").click(function (e) {
 });
 
 $("#switch-camera").click(function (e) {
-    localTracks.videoTrack.getVideoTrack().stop();
     switch (defaultCamera) {
       case 0:
         switchCamera(cameras[0]);
