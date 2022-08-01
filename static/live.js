@@ -137,7 +137,9 @@ async function join() {
         await client.publish(Object.values(localTracks));
         console.log("publish success");
         showMuteButton();
-        showSwitchCameraButton();
+        if(cameras.length > 1) {
+          $("#switch-camera").css("display", "inline-block");
+        }
         var logs = $(`
           <p class="player-name">Camera length (${cameras.length})</p>
           <p>Cameras ${JSON.stringify(cameras)}</p>
@@ -171,6 +173,7 @@ async function leave() {
     $("#leave").attr("disabled", true);
     if (options.role === "host") {
         hideMuteButton();
+        $("#switch-camera").css("display", "none");
     }
     $("#logs").empty();
     console.log("client leaves channel success");
@@ -223,12 +226,6 @@ function hideMuteButton() {
 function showMuteButton() {
   $("#mute-video").css("display", "inline-block");
   $("#mute-audio").css("display", "inline-block");
-}
-
-function showSwitchCameraButton() {
-  if(cameras.length > 1) {
-    $("#switch-camera").css("display", "inline-block");
-  }
 }
 
 async function muteAudio() {
