@@ -74,6 +74,11 @@ $("#mute-audio").click(function (e) {
   }
 });
 
+$("#switch-camera").click(function (e) {
+    localTracks.videoTrack.getVideoTrack().stop();
+    localTracks.videoTrack.switchDevice("video",devices.value);
+})
+
 $("#mute-video").click(function (e) {
   if (!localTrackState.videoTrackMuted) {
     muteVideo();
