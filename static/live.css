@@ -30,15 +30,12 @@
   }
   
   .player {
-    width: 320px;
-    height: 480px;
+    width: 480px;
+    height: 320px;
   }
   
   .player-name {
     margin: 8px 0;
-  }
-  #switch-camera {
-    display: none;
   }
   
   #success-alert, #success-alert-with-token, #mute-audio, #mute-video {
@@ -47,7 +44,7 @@
   
   @media (max-width: 640px) {
     .player {
-      width: 240px;
-      height: 320px;
+      width: 320px;
+      height: 240px;
     }
   }

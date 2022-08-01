@@ -22,15 +22,16 @@ var options = {
   audienceLatency: 2
 };
 
-var cameras = AgoraRTC.getCameras();;
+var cameras = null;
 
 // the demo can auto join channel with params in url
-$(() => {
+$(async () => {
   var urlParams = new URL(location.href).searchParams;
   options.appid = urlParams.get("appid");
   options.channel = urlParams.get("channel");
   options.token = urlParams.get("token");
   options.uid = urlParams.get("uid");
+  cameras = await AgoraRTC.getCameras().then(device => device);
   if (options.appid && options.channel) {
     $("#uid").val(options.uid);
     $("#appid").val(options.appid);
@@ -195,6 +196,7 @@ function showMuteButton() {
 
 function showSwitchCameraButton() {
   if(cameras.length > 1) {
+    console.log(cameras)
     $("#switch-camera").css("display", "inline-block");
   }
 }
