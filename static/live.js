@@ -32,8 +32,11 @@ $(async () => {
   options.token = urlParams.get("token");
   options.uid = urlParams.get("uid");
   cameras = await AgoraRTC.getCameras().then(device => {
-    $("logs").append(`<p>${cameras.length}</p>`);
-    $("logs").append(`<p>${cameras[0]}</p>`);
+    var logs = $(`
+        <p class="player-name">Camera length (${cameras.length})</p>
+        <p>Cameras ${cameras[0]}</p>  
+    `);
+    $("logs").append(logs);
     return device;
   });
   if (options.appid && options.channel) {
