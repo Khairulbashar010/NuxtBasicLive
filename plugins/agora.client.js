@@ -1,4 +1,6 @@
 import Vue from "vue";
-import AgoraRTC from "agora-rtc-sdk"
+import AgoraRTC from "agora-rtc-sdk-ng"
 
-Vue.use(AgoraRTC);
+export default ({app}, inject) => {
+    inject("AgoraRTC", AgoraRTC)
+}

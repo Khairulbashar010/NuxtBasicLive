@@ -27,7 +27,7 @@ export default {
                 // Pass your app ID here.
                 appid: agora.appid,
                 // Set the channel name.
-                channel: "test123",
+                channel: "test",
                 // Set the user role in the channel.
                 role: "audience",
                 // Use a temp token
@@ -47,9 +47,9 @@ export default {
             this.rtc.client.setClientRole("host");
             await this.rtc.client.join(this.options.appid, this.options.channel, this.options.token, this.options.uid);
             // Create an audio track from the audio sampled by a microphone.
-            this.rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            this.rtc.localAudioTrack = await this.$AgoraRTC.createMicrophoneAudioTrack();
             // Create a video track from the video captured by a camera.
-            this.rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+            this.rtc.localVideoTrack = await this.$AgoraRTC.createCameraVideoTrack();
             // Publish the local audio and video tracks to the channel.
             await this.rtc.client.publish([this.rtc.localAudioTrack, this.rtc.localVideoTrack]);
             // Dynamically create a container in the form of a DIV element for playing the remote video track.
@@ -117,14 +117,12 @@ export default {
             await this.rtc.client.leave();
         },
         startBasicLiveStreaming() {
-            this.rtc.client = AgoraRTC.createClient({mode: "live", codec: "vp8"});
+            this.rtc.client = this.$AgoraRTC.createClient({mode: "live", codec: "vp8"});
         }
 
     },
     mounted() {
-        if (process.client) {
-            this.startBasicLiveStreaming();
-        }
+        this.startBasicLiveStreaming();
     },
     beforeUnmount() {
         if(process.client) {

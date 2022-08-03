@@ -141,8 +141,8 @@ export default {
 
             if (this.options.role === "host") {
                 // create local audio and video tracks
-                this.rtc.localTracks.audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-                this.rtc.localTracks.videoTrack = await AgoraRTC.createCameraVideoTrack();
+                this.rtc.localTracks.audioTrack = await this.$AgoraRTC.createMicrophoneAudioTrack();
+                this.rtc.localTracks.videoTrack = await this.$AgoraRTC.createCameraVideoTrack();
                 // play local video track
                 this.rtc.localTracks.videoTrack.play("local-player");
                 document.getElementById("local-player-name").innerText(`localTrack(${this.options.uid})`);
@@ -213,11 +213,10 @@ export default {
     },
     mounted() {
         if(process.client){
-            this.rtc.client = AgoraRTC.createClient({
+            this.rtc.client = this.$AgoraRTC.createClient({
                 mode: "live",
                 codec: "vp8",
             });
-            this.startBasicLiveStreaming();
         }
     }
 }

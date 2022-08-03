@@ -1,5 +1,5 @@
 <template>
-  <IframeTest/>
+  <FreshStart/>
 </template>
 
 <script>
